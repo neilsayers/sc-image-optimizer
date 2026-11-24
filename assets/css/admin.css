@@ -1,0 +1,4 @@
+.scio .scio-table { max-width: 760px; margin: 12px 0; }
+.scio .scio-table th, .scio .scio-table td { padding: 8px 12px; vertical-align: middle; }
+.scio .scio-repeater input[type="text"] { width: 100%; }
+.scio h2 { margin-top: 2em; }
