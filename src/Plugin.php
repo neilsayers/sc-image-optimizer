@@ -21,6 +21,7 @@ final class Plugin
         $this->settings = new Settings;
 
         (new ImagePipeline($this->settings))->register();
+        (new ContentImages)->register();
 
         if (\is_admin()) {
             (new SettingsPage($this->settings))->register();
