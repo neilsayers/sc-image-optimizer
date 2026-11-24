@@ -3,6 +3,7 @@
 namespace SCIO\Admin;
 
 use SCIO\ImagePipeline;
+use SCIO\Regenerator;
 use SCIO\Settings\Settings;
 
 final class SettingsPage
@@ -20,12 +21,13 @@ final class SettingsPage
 
     public function addPage(): void
     {
-        \add_options_page('SC Image Optimizer', 'Image Optimizer', 'manage_options', self::SLUG, [$this, 'render']);
+        \add_menu_page('SC Image Optimizer', 'SC Image Optimizer', 'manage_options', self::SLUG, [$this, 'render'], 'dashicons-format-image', 94);
+        \add_submenu_page(self::SLUG, 'SC Image Optimizer', 'Settings', 'manage_options', self::SLUG, [$this, 'render']);
     }
 
     public function assets(string $hook): void
     {
-        if ($hook !== 'settings_page_'.self::SLUG) {
+        if ($hook !== 'toplevel_page_'.self::SLUG) {
             return;
         }
 
@@ -83,6 +85,7 @@ final class SettingsPage
         ?>
         <div class="wrap scio">
             <h1>SC Image Optimizer</h1>
+            <?php \settings_errors(); ?>
             <form method="post" action="options.php">
                 <?php \settings_fields(self::SLUG); ?>
 
@@ -162,9 +165,19 @@ final class SettingsPage
                 <?php \submit_button(); ?>
             </form>
 
-            <h2>After changing anything</h2>
-            <p>New uploads use the settings straight away. For images already in the library, regenerate them:</p>
-            <p><code>wp media regenerate --yes</code></p>
+            <h2>Regenerate existing images</h2>
+            <p>New uploads use the settings straight away. To rebuild every image already in the library with the current sizes and format, regenerate them (save any changes above first). Old files that are no longer needed are removed; your original uploads are never touched.</p>
+            <p>
+                <button type="button" class="button button-secondary" data-scio-regenerate
+                    data-url="<?php echo \esc_url(\admin_url('admin-ajax.php')); ?>"
+                    data-action="<?php echo \esc_attr(Regenerator::ACTION); ?>"
+                    data-nonce="<?php echo \esc_attr(\wp_create_nonce(Regenerator::ACTION)); ?>">Regenerate all images</button>
+            </p>
+            <div class="scio-progress" data-scio-progress hidden>
+                <div class="scio-progress__bar"><span data-scio-bar></span></div>
+                <p data-scio-status aria-live="polite"></p>
+            </div>
+            <p class="description">Or from the command line: <code>wp media regenerate --yes</code></p>
             <h2>Using it in a theme</h2>
             <p>Use <code>wp_get_attachment_image_url($id, 'lightbox')</code> for the image, and <code>scio_srcset($id)</code> for a lightbox <code>srcset</code> capped at that size.</p>
         </div>

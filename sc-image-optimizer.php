@@ -4,7 +4,7 @@
  * Plugin Name:       SC Image Optimizer
  * Plugin URI:        https://screencandy.co.uk
  * Description:       Site-agnostic image pipeline — add your own image sizes from a settings screen, write uploads as AVIF/WebP automatically, cap oversized originals, and get a capped srcset helper for lightboxes. No build step.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Requires at least: 6.6
  * Requires PHP:      8.1
  * Author:            Neil Sayers
@@ -20,7 +20,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define('SCIO_VERSION', '0.1.0');
+define('SCIO_VERSION', '0.2.0');
 define('SCIO_FILE', __FILE__);
 define('SCIO_PATH', \plugin_dir_path(__FILE__));
 define('SCIO_URL', \plugin_dir_url(__FILE__));
@@ -44,5 +44,17 @@ define('SCIO_URL', \plugin_dir_url(__FILE__));
 });
 
 require_once SCIO_PATH.'src/helpers.php';
+
+/*
+ * Not on WordPress.org, so updates come from this plugin's GitHub
+ * Releases (Plugin Update Checker, vendored in lib/ — no build step),
+ * published by .github/workflows/release.yml whenever the Version
+ * above changes.
+ */
+require_once SCIO_PATH.'lib/plugin-update-checker/plugin-update-checker.php';
+
+\YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker('https://github.com/neilsayers/sc-image-optimizer/', SCIO_FILE, 'sc-image-optimizer')
+    ->getVcsApi()
+    ->enableReleaseAssets();
 
 Plugin::instance()->boot();

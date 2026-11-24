@@ -2,3 +2,7 @@
 .scio .scio-table th, .scio .scio-table td { padding: 8px 12px; vertical-align: middle; }
 .scio .scio-repeater input[type="text"] { width: 100%; }
 .scio h2 { margin-top: 2em; }
+.scio-progress { max-width: 760px; }
+.scio-progress__bar { height: 10px; background: #dcdcde; border-radius: 5px; overflow: hidden; }
+.scio-progress__bar span { display: block; height: 100%; width: 0; background: #2271b1; transition: width .2s; }
+.scio-progress p { white-space: pre-line; }
